@@ -11,13 +11,10 @@ $params = array(
 );
 
 $database = new Database($params);
+$data = array('status' => 0, 'ordering' => 1222);
 
-$arrData = array(
-    array('name' => 'Admin 1', 'status' => 0, 'ordering' => 9),
-    array('name' => 'Admin 2'),
-    array('name' => 'Admin 3', 'ordering' => 91),
-    array('id' => 200, 'name' => 'Member 123', 'status' => 1, 'ordering' => 0)
+$where = array(
+    array('id',200,'AND'),
+    array('status',99)
 );
-
-
-echo $lastID = $database->insert($arrData, 'multi');
+$database->update($data, $where);

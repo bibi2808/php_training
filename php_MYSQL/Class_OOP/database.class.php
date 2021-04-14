@@ -83,4 +83,38 @@ class Database {
     private function query($query){
         mysqli_query($this->connect,$query);
     }
+
+    public function update($data, $where){
+        $newSet = $this->createUpdateSQL($data);
+        $newWhere = $this->createWhereSQL($where);
+        echo $query = "UPDATE `group` SET " .$newSet ." Where $newWhere ";
+       
+    }
+
+    // CREATE UPDATE SQL
+    private function createUpdateSQL($data){
+        $newQuery = '';
+        if(!empty($data)){
+            foreach($data as $key => $value){
+                $newQuery .= ", `$key` = '$value'";
+            }
+        }
+    
+        $newQuery = substr($newQuery, 2);
+        return $newQuery;
+        
+    }
+
+    // CREATE WHERE SQL
+    private function createWhereSQL($data){
+        $newWhere = [];
+        if(!empty($data)){
+            foreach($data as $value){
+                $newWhere[] = "`$value[0]` = '$value[1]'";
+                $newWhere[] = $value[2];
+            }
+            $newWhere = implode(" ", $newWhere);
+        }
+        return $newWhere;        
+    }
 }
