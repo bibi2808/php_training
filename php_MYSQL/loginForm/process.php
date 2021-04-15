@@ -15,7 +15,7 @@
 			require_once './functions.php';
 			require_once './class/database.class.php';
 			session_start();
-			if ($_SESSION['flagPermission'] == true) {
+			if (isset($_SESSION['flagPermission'])) {
 				if ($_SESSION['timeout'] + 3600 > time()) {
 					echo '<h3>Xin chào: ' . $_SESSION['userInfo']['fullname'] . '</h3>';
 					echo '<a href="logout.php">Đăng xuất</a>';
