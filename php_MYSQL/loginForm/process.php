@@ -17,7 +17,7 @@
 			session_start();
 			if ($_SESSION['flagPermission'] == true) {
 				if ($_SESSION['timeout'] + 3600 > time()) {
-					echo '<h3>Xin chào: ' . '</h3>';
+					echo '<h3>Xin chào: ' . $_SESSION['userInfo']['fullname'] . '</h3>';
 					echo '<a href="logout.php">Đăng xuất</a>';
 				} else {
 					session_unset();
