@@ -4,6 +4,7 @@ class Database {
     protected $connect;
     protected $database;
     protected $table;
+    protected $resultQuery;
 
     public function __construct($params)
     {
@@ -15,6 +16,8 @@ class Database {
             $this->database = $params['database'];
             $this->table = $params['table'];
             $this->setDatabase();
+            $this->query("SET NAMES 'utf8'");
+            $this->query("SET CHARACTER SET 'utf8'");
         }
 
     }
@@ -59,7 +62,7 @@ class Database {
     }
 
     // create INSERT ONE ROW
-    private function createInsertSQL($data){
+    public function createInsertSQL($data){
         $newQuery = array();
         $cols = '';
         $vals = '';
@@ -75,46 +78,100 @@ class Database {
     }
 
     // LAST ID
-    private function lastID(){
+    public function lastID(){
         return mysqli_insert_id($this->connect);
     }
 
     // QUERY
-    private function query($query){
-        mysqli_query($this->connect,$query);
+    public function query($query){
+        $this->resultQuery = mysqli_query($this->connect,$query);
+        return $this->resultQuery;
     }
 
     public function update($data, $where){
-        $newSet = $this->createUpdateSQL($data);
-        $newWhere = $this->createWhereSQL($where);
-        echo $query = "UPDATE `group` SET " .$newSet ." Where $newWhere ";
+        $newSet 	= $this->createUpdateSQL($data);
+		$newWhere 	= $this->createWhereUpdateSQL($where);
+		$query = "UPDATE `$this->table` SET " . $newSet . " WHERE $newWhere";
+		$this->query($query);
+		return $this->affectedRows();
        
     }
 
     // CREATE UPDATE SQL
-    private function createUpdateSQL($data){
-        $newQuery = '';
-        if(!empty($data)){
-            foreach($data as $key => $value){
-                $newQuery .= ", `$key` = '$value'";
-            }
-        }
-    
-        $newQuery = substr($newQuery, 2);
-        return $newQuery;
-        
+    public function createUpdateSQL($data){
+		$newQuery = "";
+		if(!empty($data)){
+			foreach($data as $key => $value){
+				$newQuery .= ", `$key` = '$value'";
+			}
+		}
+		$newQuery = substr($newQuery, 2);
+		return $newQuery;
+	}
+	
+	// CREATE WHERE UPDATE SQL
+	public function createWhereUpdateSQL($data){
+		$newWhere = [];
+		if(!empty($data)){
+			foreach($data as $value){
+				$newWhere[] = "`$value[0]` = '$value[1]'";
+				$newWhere[] = $value[2];
+			}
+			$newWhere = implode(" ", $newWhere);
+		}
+		return $newWhere;
+	}
+
+    public function affectedRows(){
+        return mysqli_affected_rows($this->connect);
     }
 
-    // CREATE WHERE SQL
-    private function createWhereSQL($data){
-        $newWhere = [];
-        if(!empty($data)){
-            foreach($data as $value){
-                $newWhere[] = "`$value[0]` = '$value[1]'";
-                $newWhere[] = $value[2];
-            }
-            $newWhere = implode(" ", $newWhere);
-        }
-        return $newWhere;        
+    // DELETE
+    public function delete($where){
+        $newWhere   = $this->createWhereDeleteSQL($where);
+        $query      = "DELETE FROM `$this->table` WHERE `id` IN ($newWhere)";
+        $this->query($query);
+		return $this->affectedRows();
     }
+
+    // CREATE WHERE DELETE SQL
+	public function createWhereDeleteSQL($data){
+		$newWhere = '';
+		if(!empty($data)){
+			foreach($data as $id){
+                $newWhere .= "'" . $id ."', ";
+            }
+            $newWhere .= "'0'";
+		}
+		return $newWhere;
+	}
+
+    // LIST RECORDS
+    public function listRecords($resultQuery = null){
+        $result = array();
+        $resultQuery = ($resultQuery == null) ? $this->resultQuery : $resultQuery;
+        if(mysqli_num_rows($resultQuery) > 1){
+            while($row = mysqli_fetch_assoc($this->resultQuery)){
+                $result[] = $row;
+            }
+        }
+        
+        //  giair phong bo nho
+        mysqli_free_result($resultQuery);
+        return $result;
+    }
+
+    // SINGLE RECORD
+    public function singleRecord($resultQuery = null){
+        $result = array();
+        $resultQuery = ($resultQuery == null) ? $this->resultQuery : $resultQuery;
+        if(mysqli_num_rows($resultQuery) > 1){
+            $result = mysqli_fetch_assoc($resultQuery);
+        }
+        
+        //  giair phong bo nho
+        mysqli_free_result($resultQuery);
+        return $result;
+    }
+
 }
