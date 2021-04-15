@@ -8,17 +8,19 @@
 </head>
 <body>
 <?php
+require_once('./connect.php');
 	$checkbox	= $_POST['checkbox'];
 	if(!empty($checkbox)){
 		foreach($checkbox as $key => $value){
-			@unlink("./files/$value.txt");
+			$total = $database->delete($checkbox);
 		}
+		$result = '<p>' . $total . ' rows has been deleted! Click <a href="index.php">Home</a> to back Home';
 	}
 ?>
 	<div id="wrapper">
     	<div class="title">PHP FILE</div>
         <div id="form">   
-       		<p>Dữ liệu đã được xóa thành công! Click vào <a href="index.php">đây</a> đê quay về trang chủ.</p>       
+       		<?php echo $result; ?>       
         </div>
     </div>
 </body>

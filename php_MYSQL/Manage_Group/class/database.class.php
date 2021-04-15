@@ -182,14 +182,12 @@ class Database
         $result = array();
         if (!empty($query)) {
             $resultQuery = $this->query($query);
-            if (mysqli_num_rows($resultQuery) > 1) {
+            if (mysqli_num_rows($resultQuery) > 0) {
                 $result = mysqli_fetch_assoc($resultQuery);
             }
+             //  giai phong bo nho
+            mysqli_free_result($resultQuery);
         }
-
-
-        //  giair phong bo nho
-        mysqli_free_result($resultQuery);
         return $result;
     }
 
