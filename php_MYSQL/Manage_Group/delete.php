@@ -6,13 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<title>PHP FILE</title>
 	<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#cancel-button').click(function() {
-				window.location = 'index.php';
-			});
-		});
-	</script>
+	<script type="text/javascript" src="./js/my-js.js"></script>
 </head>
 
 <body>
@@ -24,10 +18,10 @@
 		if(!empty($item)){
 			$status = $item['status'] == 0 ? 'Inactive' : 'Active';
 			$xhtml = '<div class="row">
-						<p>ID:</p> ' . $item['id'] . '
-						<p>Group Name: </p>' . $item['name'] . '
-						<p>Status:</p>' . $status .'
-						<p>Ordering:</p>' . $item['ordering'] .'
+						<p>ID:' . $item['id'] . '</p> 
+						<p>Group Name: ' . $item['name'] . '</p>
+						<p>Status:' . $status .'</p>
+						<p>Ordering:' . $item['ordering'] .'</p>
 					</div>
 					<div class="row">
 						<input type="hidden" name="id" value="' . $item['id'] . '">
@@ -35,13 +29,14 @@
 						<input type="button" value="Cancel" name="cancel" id="cancel-button">
 					</div>';
 		} else {
-			$xhtml = "Something was wrong";
+			header('location: error.php');
+			exit();
 		}
 		if(isset($_POST['submit'])){
 			$id = $_POST['id'];
 			$query = "DELETE FROM `group` WHERE `id` = $id";
 			$database->query($query);
-			$xhtml = 'Success';
+			$xhtml = '<div class ="success">Success</div>';
 			header("Location: index.php");
 			exit();
 		}
@@ -53,8 +48,6 @@
 			<form action="" method="post" name="main-form">
 				<?php 
 					echo $xhtml;
-					// header("Location: index.php");
-					// exit();
 				?>
 			</form>
 

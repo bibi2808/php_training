@@ -91,7 +91,7 @@
 	display: inline-block;
 	padding: 5px 10px;
 	border: 1px solid #ad9d9d;
-	width: 100px;
+	width: 110px;
 	text-align: center;
 	text-decoration: none;
 	color: #000;
@@ -164,5 +164,5 @@
 }
 
 .notice{
-	background-color: #d9c8af;
+	background-color: #fa4a14;
 }
