@@ -7,23 +7,30 @@
 	
 	$error = '';
 	$outValidate =array();
-	$id = $_GET['id'] ?? '';
-	$action = $_GET['action'];
+	$id = $_GET['id'];
+	// $action = $_GET['action'];
 	$flagRedirect = false;
 	$titlePage = '';
+	$requiredPass = true;
 
 	// ACTION EDIT
-	if($action == 'edit'){
+	if($action === 'edit'){
 		$id = mysqli_real_escape_string($connect, $id);
-		$query = "SELECT `name`, `status`, `ordering` FROM `group` WHERE id = '" . $id . "'";
+		$query = "SELECT `username`, CONCAT(`firstname`, ' ', `lastname`) AS fullname, `email`, `birthday`, `status`,  `ordering`, `group_id` FROM `user` WHERE id = '".$id."'";
+		die();
 		$outValidate = $database->singleRecord($query);
 		$linkForm = 'form.php?action=edit&id=' . $id;
 		if(empty($outValidate)) $flagRedirect = true;
 		$titlePage = 'EDIT USER';
-	} else if($action == 'add'){
-		// ACTION ADD
+		$queryExistRecord = "SELECT `username` FROM `user` WHERE `username` = '" . $_POST['username'] . "' AND `id` != '" . $id . "'";
+		$requiredPass = false;
+	}
+	// ACTION ADD 
+	else if($action == 'add'){
+		
 		$linkForm = 'form.php?action=add&id=' . $id;
 		$titlePage = 'ADD USER';
+		$queryExistRecord = "SELECT `username` FROM `user` WHERE `username` = '" . $_POST['username'] . "'";
 	} else{
 		$flagRedirect = true;
 	}
@@ -55,7 +62,7 @@
 					);
 		// VALIDATE
 		$validate = new Validate($source);
-		$validate->addRule('username', 'existRecord', array('database' => $database, 'query' => "SELECT `username` FROM `user` WHERE `username` = '" . $_POST['username'] ."'"))
+		$validate->addRule('username', 'existRecord', array('database' => $database, 'query' => $queryExistRecord))
 				 ->addRule('email', 'email')
 				 ->addRule('password', 'password', array('action' => $action), $requiredPass)
 				 ->addRule('birthday', 'date', array('start' => '01/01/1970', 'end' => date('d/m/Y', time())))
@@ -70,11 +77,21 @@
 			$error = $validate->showErrors();
 		} else {
 			// INSERT TO DATABASE
+			$outValidate["password"] = md5($outValidate["password"]);
+			$outValidate["birthday"] = date("Y-m-d",strtotime($outValidate["birthday"]));
 			if($action == 'edit'){
+				// If user press new password 
+				if($outValidate['password']!=null){
+					$outValidate = md5($outValidate['password']);
+				} else{
+					// if not change password
+					unset($outValidate['password']);
+				}
 				$where = array(array('id',$id));
 				$database->update($outValidate, $where);
 			
-			} else{
+			} else if($action == 'add'){
+				$outValidate['password'] = md5($outValidate['password']);
 				$database->insert($outValidate);
 				$outValidate = array();
 			}
@@ -88,7 +105,7 @@
 
 	// SELECT OPTION GROUP
 	$queryGroup = "SELECT id, name from `group` ";
-	$groupID = $database->createSelectbox($queryGroup, 'group_id', $outValidate['groupid'] ?? '');
+	$groupID = $database->createSelectbox($queryGroup, 'group_id', $outValidate['group_id'] ?? '');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -121,11 +138,11 @@
 				</div>
 				<div class="row">
 					<p>Password</p>
-					<input name="password" type="password" value="<?php echo $outValidate['password'] ?? ''; ?>">
+					<input name="password" type="password" value="">
 				</div>
 				<div class="row">
 					<p>Birthday</p>
-					<input type="text" id="birthday" name="birthday"  value="<?php echo $outValidate['birthday'] ?? ''; ?>">
+					<input type="text" id="birthday" name="birthday"  value="<?php echo date('d/m/Y',strtotime($outValidate['birthday'])) ?? ''; ?>">
 				</div>
 				<div class="row">
 					<p>Group</p>

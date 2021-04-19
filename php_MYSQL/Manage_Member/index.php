@@ -1,13 +1,7 @@
 <?php
 	require_once('./connect.php');
-	if (session_status() !== PHP_SESSION_ACTIVE) {
-		session_start();
-	}
 
-
-
-
-
+	session_start();
 
 	// MULTIPLE DELETE
 	$messageDelete = '';
@@ -49,7 +43,7 @@
 						<p class="size">' . $item['ordering'] . '</p>
 						<p class="size">' . $item['groupname'] . '</p>
 						<p class="action">
-							<a href="form.php?action=edit&id=' . $id . '">Edit</a> |
+							<a href="form.php?action=edit&id='.$id.'">Edit</a> |
 							<a href="delete.php?id=' . $id . '">Delete</a>
 						</p>
 					</div>';
