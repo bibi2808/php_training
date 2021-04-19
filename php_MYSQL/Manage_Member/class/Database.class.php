@@ -27,27 +27,23 @@ class Database
         $this->connect = $connect;
     }
 
-    public function setDatabase($database = null)
-    {
+    public function setDatabase($database = null){
         if ($database != null) {
             $this->database = $database;
         }
         mysqli_select_db($this->connect, $this->database);
     }
 
-    public function setTable($table)
-    {
+    public function setTable($table){
         $this->table = $table;
     }
 
-    public function __destruct()
-    {
+    public function __destruct(){
         mysqli_close($this->connect);
     }
 
     // INSERT
-    public function insert($data, $type = 'single')
-    {
+    public function insert($data, $type = 'single'){
         // INSERT 1 ROW
         if ($type == 'single') {
             $newQuery = $this->createInsertSQL($data);
@@ -67,8 +63,7 @@ class Database
     }
 
     // create INSERT ONE ROW
-    public function createInsertSQL($data)
-    {
+    public function createInsertSQL($data){
         $newQuery = array();
         $cols = '';
         $vals = '';
@@ -84,20 +79,17 @@ class Database
     }
 
     // LAST ID
-    public function lastID()
-    {
+    public function lastID(){
         return mysqli_insert_id($this->connect);
     }
 
     // QUERY
-    public function query($query)
-    {
+    public function query($query){
         $this->resultQuery = mysqli_query($this->connect, $query);
         return $this->resultQuery;
     }
 
-    public function update($data, $where)
-    {
+    public function update($data, $where){
         $newSet     = $this->createUpdateSQL($data);
         $newWhere     = $this->createWhereUpdateSQL($where);
         $query = "UPDATE `$this->table` SET " . $newSet . " WHERE $newWhere";
@@ -106,8 +98,7 @@ class Database
     }
 
     // CREATE UPDATE SQL
-    public function createUpdateSQL($data)
-    {
+    public function createUpdateSQL($data){
         $newQuery = "";
         if (!empty($data)) {
             foreach ($data as $key => $value) {
@@ -119,8 +110,7 @@ class Database
     }
 
     // CREATE WHERE UPDATE SQL
-    public function createWhereUpdateSQL($data)
-    {
+    public function createWhereUpdateSQL($data){
         $newWhere = array();
         if (!empty($data)) {
             foreach ($data as $value) {
@@ -133,14 +123,12 @@ class Database
         return $newWhere;
     }
 
-    public function affectedRows()
-    {
+    public function affectedRows(){
         return mysqli_affected_rows($this->connect);
     }
 
     // DELETE
-    public function delete($where)
-    {
+    public function delete($where){
         $newWhere   = $this->createWhereDeleteSQL($where);
         $query      = "DELETE FROM `$this->table` WHERE `id` IN ($newWhere)";
         $this->query($query);
@@ -148,8 +136,7 @@ class Database
     }
 
     // CREATE WHERE DELETE SQL
-    public function createWhereDeleteSQL($data)
-    {
+    public function createWhereDeleteSQL($data){
         $newWhere = '';
         if (!empty($data)) {
             foreach ($data as $id) {
@@ -161,8 +148,7 @@ class Database
     }
 
     // LIST RECORDS
-    public function listRecords($query)
-    {
+    public function listRecords($query){
         $result = array();
         if (!empty($query)) {
             $resultQuery = $this->query($query);
@@ -177,9 +163,33 @@ class Database
         return $result;
     }
 
+    // LIST GROUP RECORDS
+    public function createSelectbox($query, $name, $keySelected = null, $class = null){
+        $result = array();
+        $xhtml = "";
+        if (!empty($query)) {
+            $resultQuery = $this->query($query);
+            if (mysqli_num_rows($resultQuery) > 1) {
+                $xhtml = '<select class="' . $class . '" name="' . $name . '">';
+                $xhtml .= '<option value="0" selected="true">Select a value</option>';
+                while ($row = mysqli_fetch_assoc($this->resultQuery)) {
+                    if ($keySelected == $row['id'] && $keySelected != null) {
+                        $xhtml .= '<option value="' . $row['id'] . '" selected="true">' . $row['name'] . '</option>';
+                    } else {
+                        $xhtml .= '<option value="' . $row['id'] . '">' . $row['name'] . '</option>';
+                    }
+                }
+                $xhtml .= '</select>';
+                //  giai phong bo nho
+                mysqli_free_result($resultQuery);
+            }
+        }
+        
+        return $xhtml;
+    }
+
     // SINGLE RECORD
-    public function singleRecord($query)
-    {
+    public function singleRecord($query){
         $result = array();
         if (!empty($query)) {
             $resultQuery = $this->query($query);
@@ -193,8 +203,7 @@ class Database
     }
 
     // EXITS
-    public function isExist($query)
-    {
+    public function isExist($query){
         if ($query != null) {
             $this->resultQuery =$this->query($query);
         }
