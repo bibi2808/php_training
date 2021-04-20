@@ -2,32 +2,33 @@
 	require_once './class/Validate.class.php';
 	require_once './class/HTML.class.php';
 	require_once './connect.php';
-
+	
 	session_start();
 	
 	$error = '';
 	$outValidate =array();
 	$id = $_GET['id'];
-	// $action = $_GET['action'];
+	$action = $_GET['action'];
 	$flagRedirect = false;
 	$titlePage = '';
 	$requiredPass = true;
 
 	// ACTION EDIT
-	if($action === 'edit'){
-		$id = mysqli_real_escape_string($connect, $id);
+	if($action == 'edit'){
+		$id = mysqli_real_escape_string($database->connect, $id);
 		$query = "SELECT `username`, CONCAT(`firstname`, ' ', `lastname`) AS fullname, `email`, `birthday`, `status`,  `ordering`, `group_id` FROM `user` WHERE id = '".$id."'";
-		die();
 		$outValidate = $database->singleRecord($query);
 		$linkForm = 'form.php?action=edit&id=' . $id;
 		if(empty($outValidate)) $flagRedirect = true;
 		$titlePage = 'EDIT USER';
-		$queryExistRecord = "SELECT `username` FROM `user` WHERE `username` = '" . $_POST['username'] . "' AND `id` != '" . $id . "'";
+		$queryExistRecord = "SELECT `username` FROM `user` WHERE `username` = '" . $outValidate['username'] . "' AND `id` != '" . $id . "'";
 		$requiredPass = false;
-	}
-	// ACTION ADD 
-	else if($action == 'add'){
-		
+		echo '<pre>';
+		print_r($outValidate);
+		echo '<pre />';
+	} else if($action == 'add'){
+		// ACTION ADD 
+
 		$linkForm = 'form.php?action=add&id=' . $id;
 		$titlePage = 'ADD USER';
 		$queryExistRecord = "SELECT `username` FROM `user` WHERE `username` = '" . $_POST['username'] . "'";
@@ -101,11 +102,11 @@
 
 	// SELECT OPTION STATUS
 	$arrStatus = array(2 => 'Select status', 0 => 'Inactive', 1 => 'Active');
-	$status = HTML::createSelectbox($arrStatus, 'status', $outValidate['status'] ?? '');
+	$status = HTML::createSelectbox($arrStatus, 'status', $outValidate['status']);
 
 	// SELECT OPTION GROUP
 	$queryGroup = "SELECT id, name from `group` ";
-	$groupID = $database->createSelectbox($queryGroup, 'group_id', $outValidate['group_id'] ?? '');
+	$groupID = $database->createSelectbox($queryGroup, 'group_id', $outValidate['group_id']);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -158,7 +159,7 @@
 				</div>
 
 				<div class="row">
-					<input type="submit" value="Update" name="submit">
+					<input type="submit" value="Save" name="submit">
 					<input type="button" value="Cancel" name="cancel" id="cancel-button">
 					<input type="hidden" value="<?php echo time(); ?>" name="token" />
 				</div>

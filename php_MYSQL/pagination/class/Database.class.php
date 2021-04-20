@@ -152,13 +152,13 @@ class Database
         $result = array();
         if (!empty($query)) {
             $resultQuery = $this->query($query);
-            if (mysqli_num_rows($resultQuery) > 1) {
+            if (mysqli_num_rows($resultQuery) > 0) {
                 while ($row = mysqli_fetch_assoc($this->resultQuery)) {
                     $result[] = $row;
                 }
             }
         }
-        //  giair phong bo nho
+        //  giai phong bo nho
         mysqli_free_result($resultQuery);
         return $result;
     }
@@ -202,7 +202,7 @@ class Database
         return $result;
     }
 
-    // COUNT ITEM
+    // COUNT ITEMs
     public function totalItem($query){
         if (!empty($query)) {
             $resultQuery = $this->query($query);
