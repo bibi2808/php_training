@@ -1,10 +1,10 @@
 <?php
 class Bootstrap{
     public function __construct(){
-        $controllerURL = (isset($_GET['controller'])) ? $_GET['controller'] : 'index';
-        $actionURL = (isset($_GET['action'])) ? $_GET['action'] : 'index';
+        $controllerURL = (isset($_GET['controller'])) ? $_GET['controller'] : 'index'; // login
+        $actionURL = (isset($_GET['action'])) ? $_GET['action'] : 'index'; // ActionName -> index
 
-        $controllerName = ucfirst($controllerURL); // Login
+        $controllerName = ucfirst($controllerURL); // ClassName -> Login
 
         $file = CONTROLLER_PATH . $controllerURL . '.php';
 
