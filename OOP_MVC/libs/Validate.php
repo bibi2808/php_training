@@ -27,10 +27,15 @@ class Validate{
 	public function getError(){
 		return $this->errors;
 	}
-
+	
 	// Set error
 	public function setError($element, $message){
-		$this->errors[$element] = '<b>' . ucfirst($element) . ':</b> ' . $message;
+		
+		if(array_key_exists($element, $this->errors)){
+			$this->errors[$element] .= ' - ' . $message;
+		}else{
+			$this->errors[$element] = '<b>' . ucfirst($element) . ':</b> ' . $message;
+		}
 	}
 	
 	// Get result
@@ -52,10 +57,10 @@ class Validate{
 			}else{
 				switch ($value['type']) {
 					case 'int':
-						$this->validateInt($element, $value['options']['min'], $value['options']['min']);
+						$this->validateInt($element, $value['options']['min'], $value['options']['max']);
 						break;
 					case 'string':
-						$this->validateString($element, $value['options']['min'], $value['options']['min']);
+						$this->validateString($element, $value['options']['min'], $value['options']['max']);
 						break;
 					case 'url':
 						$this->validateUrl($element);
@@ -78,6 +83,9 @@ class Validate{
 					case 'existRecord':
 						$this->validateExistRecord($element, $value['options']);
 						break;
+					case 'file':
+						$this->validateFile($element, $value['options']);
+						break;
 				}
 			}
 			if(!array_key_exists($element, $this->errors)) {
@@ -92,7 +100,7 @@ class Validate{
 	// Validate Integer
 	private function validateInt($element, $min = 0, $max = 0){
 		if(!filter_var($this->source[$element], FILTER_VALIDATE_INT, array("options"=>array("min_range"=>$min,"max_range"=>$max)))){
-			$this->setError($element, ' is an invalid number');
+			$this->setError($element, 'is an invalid number');
 		}
 	}
 	
@@ -100,54 +108,72 @@ class Validate{
 	private function validateString($element, $min = 0, $max = 0){
 		$length = strlen($this->source[$element]);
 		if($length < $min) {
-			$this->setError($element, ' is too short');
+			$this->setError($element, 'is too short');
 		}elseif($length > $max){
-			$this->setError($element, ' is too long');
+			$this->setError($element, 'is too long');
 		}elseif(!is_string($this->source[$element])){
-			$this->setError($element, ' is an invalid string');
+			$this->setError($element, 'is an invalid string');
 		}
 	}
 	
 	// Validate URL
 	private function validateURL($element){
 		if(!filter_var($this->source[$element], FILTER_VALIDATE_URL)){
-			$this->setError($element, ' is an invalid url');
+			$this->setError($element, 'is an invalid url');
 		}
 	}
 	
 	// Validate Email
 	private function validateEmail($element){
 		if(!filter_var($this->source[$element], FILTER_VALIDATE_EMAIL)){
-			$this->setError($element, ' is an invalid email');
+			$this->setError($element, 'is an invalid email');
 		}
+	}
+	
+	public function showErrors(){
+		$xhtml = '';
+		if(!empty($this->errors)){
+			$xhtml .= '<ul class="error">';
+			foreach($this->errors as $key => $value){
+				$xhtml .= '<li>'.$value.' </li>';
+			}
+			$xhtml .=  '</ul>';
+		}
+		return $xhtml;
+	}
+	
+	public function isValid(){
+	 	if(count($this->errors)>0) return false;
+	 	return true;	
 	}
 	
 	// Validate Status
 	private function validateStatus($element){
 		if($this->source[$element] < 0 || $this->source[$element] > 1){
-			$this->setError($element, ' Select status');
+			$this->setError($element, 'Select status');
 		}
 	}
-
+	
 	// Validate GroupID
 	private function validateGroupID($element){
-		if($this->source[$element]  == 0){
-			$this->setError($element, ' Select group');
+		if($this->source[$element] == 0){
+			$this->setError($element, 'Select group');
 		}
 	}
-
+	
 	// Validate Password
-	private function validatePassword($element, $options){
-        if ($options['action'] == 'add' || ($options['action'] == 'edit' && $this->source[$element])) {
-            $pattern = '#^(?=.*\d)(?=.*[A-Z])(?=.*\W).{8,8}$#';
-            if (!preg_match($pattern, $this->source[$element])) {
-                $this->setError($element, ' is an invalid password');
-            }
-        }
+	private function validatePassword($element, $options){		
+		if($options['action'] == 'add' || ($options['action'] == 'edit' && $this->source[$element] )){
+			$pattern = '#^(?=.*\d)(?=.*[A-Z])(?=.*\W).{8,8}$#';	// Php4567!
+			if(!preg_match($pattern, $this->source[$element])){
+				$this->setError($element, 'is an invalid password');
+			};
+		}
+		
 	}
-
+	
 	// Validate Date
-	private function validateDate($element, $start, $end){
+	private function validateDate($element, $start, $end){		
 		// Start
 		$arrDateStart 	= date_parse_from_format('d/m/Y', $start) ;
 		$tsStart		= mktime(0, 0, 0, $arrDateStart['month'], $arrDateStart['day'], $arrDateStart['year']);
@@ -164,33 +190,28 @@ class Validate{
 			$this->setError($element, 'is an invalid date');
 		}
 	}
-
-	// Validate Exist record from DB
+	
+	// Validate Exist record
 	private function validateExistRecord($element, $options){
 		$database = $options['database'];
-		$query = $options['query'];
-		if($database->isExist($query)){
-			$this->setError($element, 'records is exists');
-		}
-	}
+		
 
-	// Show Errors
-	public function showErrors(){
-		$xhtml = '';
-		if(!empty($this->errors)){
-			$xhtml .= '<ul class="error">';
-			foreach($this->errors as $key => $value){
-				$xhtml .= '<li>' . $value . '</li>';
-			}
-			$xhtml .=  '</ul>';
+		echo $query	  = $options['query'];
+		if($database->isExist($query) == false){
+			$this->setError($element, 'record is not exist');
 		}
-		return $xhtml;
 	}
 	
-	// Check isValid
-	public function isValid(){
-	 	if(count($this->errors)>0) return false;
-	 	return true;	
+	// Validate File
+	private function validateFile($element, $options){
+
+		if(!filter_var($this->source[$element]['size'], FILTER_VALIDATE_INT, array("options"=>array("min_range"=>$options['min'],"max_range"=>$options['max'])))){
+			$this->setError($element, 'kích thước không phù hợp');
+		}
+		
+		$ext = pathinfo($this->source[$element]['name'], PATHINFO_EXTENSION);
+		if(in_array($ext, $options['entension']) == false){
+			$this->setError($element, 'phần mở rộng không phù hợp');
+		}
 	}
-	
 }

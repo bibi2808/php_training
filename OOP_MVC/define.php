@@ -10,6 +10,8 @@
 
     define('ROOT_URL'       , 'OOP_MVC');
     define('PUBLIC_URL', ROOT_URL . DS . 'public' .DS);
+    define('VIEW_URL', ROOT_URL . DS . 'views' . DS);
+    
     // ============================= DATABASE ====================================
     define('DB_HOST', 'localhost');
     define('DB_USER', 'root');

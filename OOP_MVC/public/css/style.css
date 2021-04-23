@@ -4,7 +4,7 @@
 	}
 	
 	body{
-		background-color: #faf2f2;
+		background-color: #e7e7e7;
 	}
 	
 	div.wrapper{
@@ -28,15 +28,15 @@
 	}
 	
 	div.header{
-		background: rgb(199, 187, 187);
+		background: #fff;
 	}
 	
 	div.content{
-		background-color: #771e3c33;	
+		background-color: #f4fbf9;	
 	}
 	
 	div.footer{
-		background: rgb(151, 158, 150);
+		background: #fff;
 	}
 	
 	div.header a{

@@ -1,7 +1,7 @@
 <?php
 class Bootstrap{
     public function __construct(){
-        $controllerURL = (isset($_GET['controller'])) ? $_GET['controller'] : 'index'; // login
+        $controllerURL = (isset($_GET['controller'])) ? $_GET['controller'] : 'index'; // controller -> login
         $actionURL = (isset($_GET['action'])) ? $_GET['action'] : 'index'; // ActionName -> index
 
         $controllerName = ucfirst($controllerURL); // ClassName -> Login
@@ -13,8 +13,9 @@ class Bootstrap{
             $controller = new $controllerName;
 
             if(method_exists($controller, $actionURL)){
-                $controller->$actionURL();
                 $controller->loadModel($controllerURL);
+                $controller->$actionURL();
+                
             }else{
                 $this->error();
             }

@@ -6,8 +6,15 @@ class Model {
     protected $table;
     protected $resultQuery;
 
-    public function __construct($params)
+    public function __construct($params = null)
     {
+        if($params == null){
+            $params['server'] = DB_HOST;
+            $params['username'] = DB_USER;
+            $params['password'] = DB_PASS;
+            $params['database'] = DB_NAME;
+            $params['table'] = DB_TABLE;
+        }
         $link = mysqli_connect($params['server'], $params['username'], $params['password']);
         if(!$link){
             die('Failed');
@@ -146,20 +153,38 @@ class Model {
 		return $newWhere;
 	}
 
-    // LIST RECORDS
-    public function listRecords($resultQuery = null){
-        $result = array();
-        $resultQuery = ($resultQuery == null) ? $this->resultQuery : $resultQuery;
-        if(mysqli_num_rows($resultQuery) > 1){
-            while($row = mysqli_fetch_assoc($this->resultQuery)){
-                $result[] = $row;
-            }
-        }
-        
-        //  giair phong bo nho
-        mysqli_free_result($resultQuery);
-        return $result;
-    }
+    // // LIST RECORDS
+    // public function listRecords($resultQuery = null){
+    //     $result = array();
+    //     $resultQuery = ($resultQuery == null) ? $this->resultQuery : $resultQuery;
+    //     echo 'ok';
+    //     if(mysqli_num_rows($resultQuery) > 0){
+            
+    //         while($row = mysqli_fetch_assoc($this->resultQuery)){
+    //             $result[] = $row;
+    //         }
+    //         //  giair phong bo nho
+    //         mysqli_free_result($resultQuery);
+    //     }
+                
+    //     return $result;
+    // }
+
+    // LIST RECORD
+	public function listRecords($query){
+		$result = array();
+		if(!empty($query)){
+			$resultQuery = $this->query($query);
+			if(mysqli_num_rows($resultQuery) > 0){
+				while($row = mysqli_fetch_assoc($resultQuery)){
+					$result[] = $row;
+				}
+				mysqli_free_result($resultQuery);
+			}
+		}
+		return $result;
+	}
+
 
     // SINGLE RECORD
     public function singleRecord($resultQuery = null){
@@ -173,5 +198,15 @@ class Model {
         mysqli_free_result($resultQuery);
         return $result;
     }
+
+    // EXIST
+	public function isExist($query){
+		if($query != null) {
+			$this->resultQuery = $this->query($query);
+		}
+        
+		if($this->resultQuery !==false && mysqli_num_rows($this->resultQuery ) > 0) return true;
+		return false;
+	}
 
 }
