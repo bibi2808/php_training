@@ -1,0 +1,5 @@
+Manage User     module User
+    - Add, Edit, Delete, List
+Manage Book     module Book
+Manage Invoice  module Invoice
+Manage Guest    module Client
