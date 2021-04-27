@@ -1,12 +1,11 @@
 <?php
-class IndexModel {
+class IndexModel extends Model{
     public function __construct()
     {
-        echo '<br />';
-        echo __METHOD__;
+        echo '<h3>' . __METHOD__ . '</h3>';
     }
 
     public function listItems(){
-        echo __METHOD__;
+        echo '<h3>' . __METHOD__ . '</h3>';
     }
 }

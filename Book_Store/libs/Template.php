@@ -1,0 +1,83 @@
+<?php
+class Template
+{
+
+    // FILE CONFIG ( admin/main/template.ini )
+    private $_fileConfig;
+
+    // FILE TEMPLATE ( admin/main/index.php )
+    private $_fileTemplate;
+
+    // FOLDER TEMPLATE ( admin/main/)
+    private $_folderTemplate;
+
+    // CONTROLLER object
+    private $_controller;
+
+    public function __construct($controller)
+    {
+        $this->_controller = $controller;
+    }
+
+    public function load()
+    {
+        $fileConfig = $this->getFileConfig();
+        $folderTemplate = $this->getFolderTemplate();
+        $fileTemplate = $this->getFileTemplate();
+
+        $pathFileConfig = TEMPLATE_PATH . $folderTemplate . $fileConfig;
+
+        if (file_exists($pathFileConfig)) {
+            $arrConfig = parse_ini_file($pathFileConfig);
+            $view = $this->_controller->getView();
+            $view->_title       = $view->createTitle($arrConfig['title']);
+            $view->_metaHTTP    = $view->createMeta($arrConfig['metaHTTP'], 'http-equiv');
+            $view->_metaName    = $view->createMeta($arrConfig['metaName'], 'name');
+            $view->_cssFiles    = $view->createLink($this->_folderTemplate . $arrConfig['dirCss'], $arrConfig['fileCss'], 'css');
+            $view->_jsFiles     = $view->createLink($this->_folderTemplate . ($arrConfig['dirJs'] ?? ''), ($arrConfig['fileJs'] ?? ''), 'js');
+            $view->_dirImg      = $arrConfig['dirImg'] ?? '';
+
+
+
+            $view->setTemplatePath(TEMPLATE_PATH . $folderTemplate . $fileTemplate);
+        }
+    }
+
+
+
+    // SET FILE TEMPLATE ( 'index.php' )
+    public function setFileTemplate($value = 'index.php')
+    {
+        $this->_fileTemplate = $value;
+    }
+
+    // GET TEMPLATE FILE
+    public function getFileTemplate()
+    {
+        return $this->_fileTemplate;
+    }
+
+    // SET FILE CONFIG ( 'template.ini' )
+    public function setFileConfig($value = 'template.ini')
+    {
+        $this->_fileConfig = $value;
+    }
+
+    // GET FILE CONFIG
+    public function getFileConfig()
+    {
+        return $this->_fileConfig;
+    }
+
+    // SET FOLDER TEMPLATE ( 'default/main/' )
+    public function setFolderTemplate($value = 'default/main')
+    {
+        $this->_folderTemplate = $value;
+    }
+
+    // GET FOLDER TEMPLATE 
+    public function getFolderTemplate()
+    {
+        return $this->_folderTemplate;
+    }
+}

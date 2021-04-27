@@ -1,3 +1,3 @@
 <?php
 
-    echo $this->data;
+    echo '<p>' . strtolower($this->data) . '</p>';
