@@ -50,16 +50,44 @@ class Helper
 
     // Create Title sort
 	public static function cmsLinkSort($name, $column, $columnPost, $orderPost){
-        echo $column .'<br/>';
-        // echo $columnPost;
+        $column .'<br/>';
 		$img	= '';
 		$order	= ($orderPost == 'desc') ? 'asc' : 'desc';
 		if($column == $columnPost){
 			$img	= '<img src="'.TEMPLATE_URL.'admin/main/images/admin/sort_'.$orderPost.'.png" alt="">';
-		}else{
-            // echo 'error';
-        }
+		}
 		$xhtml = '<a href="#" onclick="javascript:sortList(\''.$column.'\',\''.$order.'\')">'.$name.$img.'</a>';
+		return $xhtml;
+	}
+
+    // Create SelectBox
+	public static function cmsSelectbox($name, $class, $arrValue, $keySelect = 'default', $style = null){
+        
+		$xhtml = '<select style="'.$style.'" name="'.$name.'" class="'.$class.'" >';
+		foreach($arrValue as $key => $value){
+			if($key == $keySelect){
+				$xhtml .= '<option selected="selected" value = "'.$key.'">'.$value.'</option>';
+			}else{
+				$xhtml .= '<option value = "'.$key.'">'.$value.'</option>';
+			}
+		}
+		$xhtml .= '</select>';
+		return $xhtml;
+	}
+
+    // Create Message
+	public static function cmsMessage($message){
+		$xhtml = '';
+		if(!empty($message)){
+			$xhtml = '<dl id="system-message">
+							<dt class="'.$message['class'].'">'.ucfirst($message['class']).'</dt>
+							<dd class="'.$message['class'].' message">
+								<ul>
+									<li>'.$message['content'].'</li>
+								</ul>
+							</dd>
+						</dl>';
+		}
 		return $xhtml;
 	}
 }

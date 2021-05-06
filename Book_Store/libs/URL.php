@@ -3,13 +3,13 @@ class URL
 {
     public static function createLink($module, $controller, $action, $params = null)
     {
+        $linkParams = '';
         if (!empty($params)) {
-            $linkParams = '';
             foreach ($params as $key => $value) {
                 $linkParams .= "&$key=$value";
             }
         }
-        $url = 'index.php?module='. $module .'&controller='. $controller .'&action=' .$action . $linkParams;
+        $url = 'index.php?module='. $module .'&controller='. $controller . '&action=' .$action . $linkParams;
         return $url;
     }
 

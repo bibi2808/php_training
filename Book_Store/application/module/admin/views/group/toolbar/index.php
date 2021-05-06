@@ -12,8 +12,8 @@
     $btnUnPushlish = Helper::cmsButton('Unpublish', 'toolbar-unpublish', $linkUnpublish, 'icon-32-unpublish', 'submit');
 
     // Button Ordering
-    // $linkbtnOrdering = URL::createLink('admin', 'group', 'odering');
-    // $btnOrdering = Helper::cmsButton('Ordering', 'toolbar-checkin', $linkbtnOrdering, 'icon-32-checkin');
+    $linkbtnOrdering = URL::createLink('admin', 'group', 'ordering');
+    $btnOrdering = Helper::cmsButton('Ordering', 'toolbar-checkin', $linkbtnOrdering, 'icon-32-checkin', 'submit');
 
     // Button Trash
     $linkTrash = URL::createLink('admin', 'group', 'trash');
@@ -42,7 +42,7 @@
     $cmsBtn = $btnNew . $btnPublish . $btnUnPushlish . $btnTrash;
     switch ($this->arrParams['action']) {
         case 'index':
-            $cmsBtn = $btnNew . $btnPublish . $btnUnPushlish . $btnTrash;
+            $cmsBtn = $btnNew . $btnPublish . $btnUnPushlish .$btnOrdering . $btnTrash;
         break;
         case 'add':
             $cmsBtn = $btnSave . $btnSaveClose . $btnSaveNew . $btnCancel;

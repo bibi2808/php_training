@@ -51,11 +51,11 @@
                     <button type="button" name="clear-keyword">Clear</button>
                 </div>
                 <div class="filter-select fltrt">
-                    <select style="" name="filter_state" class="inputbox">
+                    <select name="filter_state" class="inputbox">
                         <option value="default">- Select Status -</option>
                         <option value="1">Publish</option>
                         <option value="0">Unpublish</option>
-                    </select><select style="" name="filter_group_acp" class="inputbox">
+                    </select><select name="filter_group_acp" class="inputbox">
                         <option value="default">- Select Group ACP -</option>
                         <option value="1">Yes</option>
                         <option value="0">No</option>

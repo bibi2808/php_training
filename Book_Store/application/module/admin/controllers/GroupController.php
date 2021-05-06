@@ -14,7 +14,12 @@ class GroupController extends Controller
     public function indexAction()
     {
         $this->_view->_title = 'User Manager: User Groups';
+        $totalItems = $this->_model->countItem($this->_arrParam, null);
+        $configPagination = array('totalItemsPerPage'	=> 3, 'pageRange' => 3);
+        $this->setPagination($configPagination);
+        $this->_view->pagination = new Pagination($totalItems, $this->_pagination);
         $this->_view->Items = $this->_model->listItem($this->_arrParam, null);
+        
         $this->_view->render('group/index');
     }
 
@@ -45,10 +50,10 @@ class GroupController extends Controller
 		URL::redirect('admin', 'group', 'index');
 	}
     
-    public function addAction()
+    public function orderingAction()
     {
-        // echo '<h3>' . __METHOD__ . '</h3>';
-        $this->_view->_title = 'User Manager: User Groups : ADD';
-        $this->_view->render('group/add', true);
+        
+        $this->_model->ordering($this->_arrParam);
+        URL::redirect('admin', 'group', 'index');
     }
 }
