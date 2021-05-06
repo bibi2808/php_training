@@ -28,4 +28,10 @@ class UserController extends Controller
         $this->_view->appendJS(array('user/js/abc.js'));
         $this->_view->render('user/logout', true);
     }
+
+    public function indexAction()
+    {
+        // echo '<h3>' . __METHOD__ . '</h3>';
+        $this->_view->render('user/logout', true);
+    }
 }

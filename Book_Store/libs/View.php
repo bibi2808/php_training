@@ -20,7 +20,7 @@ class View
 
     public function render($fileInclude, $loadFull = true)
     {
-        $path = APPLICATION_PATH . $this->_moduleName . DS . 'views' . DS . $fileInclude . '.php';
+        $path = MODULE_PATH . $this->_moduleName . DS . 'views' . DS . $fileInclude . '.php';
         if(file_exists($path)){
             if ($loadFull) {
                 $this->_fileView = $fileInclude;

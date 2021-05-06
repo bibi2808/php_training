@@ -14,9 +14,9 @@ class Model{
 			$params['database']	= DB_NAME;
 			$params['table']	= DB_TABLE;
 		}
-		$link = mysql_connect($params['server'], $params['username'], $params['password']);
+		$link = mysqli_connect($params['server'], $params['username'], $params['password']);
 		if(!$link){
-			die('Fail connect: ' . mysql_errno());
+			die('Fail connect: ' . mysqli_errno($this->connect));
 		}else{
 			$this->connect 	= $link;
 			$this->database = $params['database'];
@@ -37,7 +37,7 @@ class Model{
 		if($database != null) {
 			$this->database = $database;
 		}
-		mysql_select_db($this->database, $this->connect );
+		mysqli_select_db($this->connect , $this->database);
 	}
 	
 	// SET TABLE
@@ -47,7 +47,7 @@ class Model{
 	
 	// DISCONNECT DATABASE
 	public function __destruct(){
-		mysql_close($this->connect);
+		mysqli_close($this->connect);
 	}
 	
 	// INSERT
@@ -70,6 +70,8 @@ class Model{
 	public function createInsertSQL($data){
 		$newQuery = array();
 		if(!empty($data)){
+			$cols = "";
+			$vals = "";
 			foreach($data as $key=> $value){
 				$cols .= ", `$key`";
 				$vals .= ", '$value'";
@@ -82,12 +84,12 @@ class Model{
 	
 	// LAST ID
 	public function lastID(){
-		return mysql_insert_id($this->connect);
+		return mysqli_insert_id($this->connect);
 	}
 	
 	// QUERY
 	public function query($query){
-		$this->resultQuery = mysql_query($query, $this->connect);
+		$this->resultQuery = mysqli_query($this->connect, $query);
 		return $this->resultQuery;
 	}
 	
@@ -114,7 +116,7 @@ class Model{
 	
 	// CREATE WHERE UPDATE SQL
 	public function createWhereUpdateSQL($data){
-		$newWhere = '';
+		$newWhere = array();
 		if(!empty($data)){
 			foreach($data as $value){
 				$newWhere[] = "`$value[0]` = '$value[1]'";
@@ -127,7 +129,7 @@ class Model{
 	
 	// AFFECTED ROWS
 	public function affectedRows(){
-		return mysql_affected_rows($this->connect);
+		return mysqli_affected_rows($this->connect);
 	}
 	
 	// DELETE
@@ -155,11 +157,11 @@ class Model{
 		$result = array();
 		if(!empty($query)){
 			$resultQuery = $this->query($query);
-			if(mysql_num_rows($resultQuery) > 0){
-				while($row = mysql_fetch_assoc($resultQuery)){
+			if(mysqli_num_rows($resultQuery) > 0){
+				while($row = mysqli_fetch_assoc($resultQuery)){
 					$result[] = $row;
 				}
-				mysql_free_result($resultQuery);
+				mysqli_free_result($resultQuery);
 			}
 		}
 		return $result;
@@ -170,10 +172,10 @@ class Model{
 		$result = array();
 		if(!empty($query)){
 			$resultQuery = $this->query($query);
-			if(mysql_num_rows($resultQuery) > 0){
+			if(mysqli_num_rows($resultQuery) > 0){
 				$xhtml = '<select class="'.$class.'" name="'.$name.'">';
 				$xhtml .= '<option value="0">Select a value</option>';
-				while($row = mysql_fetch_assoc($resultQuery)){
+				while($row = mysqli_fetch_assoc($resultQuery)){
 					if($keySelected == $row['id'] && $keySelected != null){
 						$xhtml .= '<option value="'.$row['id'].'" selected="true">'.$row['name'].'</option>';
 					}else{
@@ -181,7 +183,7 @@ class Model{
 					}
 				}
 				$xhtml .= '</select>';
-				mysql_free_result($resultQuery);
+				mysqli_free_result($resultQuery);
 			}
 		}
 	
@@ -194,10 +196,10 @@ class Model{
 		$result = array();
 		if(!empty($query)){
 			$resultQuery = $this->query($query);
-			if(mysql_num_rows($resultQuery) > 0){
-				$result = mysql_fetch_assoc($resultQuery);
+			if(mysqli_num_rows($resultQuery) > 0){
+				$result = mysqli_fetch_assoc($resultQuery);
 			}
-			mysql_free_result($resultQuery);
+			mysqli_free_result($resultQuery);
 		}
 		return $result;
 	}
@@ -207,7 +209,7 @@ class Model{
 		if($query != null) {
 			$this->resultQuery = $this->query($query);
 		}
-		if(mysql_num_rows($this->resultQuery ) > 0) return true;
+		if(mysqli_num_rows($this->resultQuery ) > 0) return true;
 		return false;
 	}
 }
