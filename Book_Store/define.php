@@ -26,3 +26,4 @@
     define('DB_TABLE', 'group');
     // ============================= DATABASE TABLE NAME====================================
     define('TBL_GROUP', 'group');
+    define('TBL_USER', 'user');

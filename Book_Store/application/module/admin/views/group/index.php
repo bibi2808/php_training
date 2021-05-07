@@ -13,6 +13,8 @@ $lblCreatedBy       = Helper::cmsLinkSort('Created By', 'created_by', $columnPos
 $lblModified        = Helper::cmsLinkSort('Modified', 'modified', $columnPost, $orderPost);
 $lblModifiedBy      = Helper::cmsLinkSort('Modified By', 'modified_by', $columnPost, $orderPost);
 $lblID              = Helper::cmsLinkSort('ID', 'id', $columnPost, $orderPost);
+
+
 // SELECT BOX
 $arrStatus = array('default' => '- Select Status -', 1 => 'Publish', 0 => 'UnPublish');
 $selectboxStatus = Helper::cmsSelectbox('filter_state', 'inputbox', $arrStatus, isset($this->arrParams['filter_state']) ? $this->arrParams['filter_state'] : '');
@@ -28,6 +30,8 @@ $paginationHTML = $this->pagination->showPagination(URL::createLink('admin', 'gr
 $message	= Session::get('message');
 Session::delete('message');
 $strMessage = Helper::cmsMessage($message);
+
+
 ?>
 <div id="system-message-container"><?php echo $strMessage;?></div>
 
@@ -93,9 +97,11 @@ $strMessage = Helper::cmsMessage($message);
                             $modified = Helper::formartDate('d-m-Y', $value['modified']);
                             $modifiredBy = $value['modified_by'];
 
+                            $linkEdit = URL::createLink('admin', 'group', 'form', array('id' => $id));
+
                             echo '<tr class="' . $row . '">
                                     <td class="center">' . $ckb . '</td>
-                                    <td><a href="#">' . $name . '</a>
+                                    <td><a href="'.$linkEdit.'">' . $name . '</a>
                                     </td>
                                     <td class="center">' . $status . '</td>
                                     <td class="center">' . $group_acp . '</td>

@@ -76,5 +76,10 @@ $(document).ready(function () {
 	$('#filter-bar select[name=filter_group_acp]').change(function () {
 		$('#adminForm').submit();
 	})
+
+	// change group_id in select option
+	$('#filter-bar select[name=filter_group_id]').change(function () {
+		$('#adminForm').submit();
+	})
 })
 

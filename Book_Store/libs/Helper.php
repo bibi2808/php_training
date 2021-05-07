@@ -60,21 +60,6 @@ class Helper
 		return $xhtml;
 	}
 
-    // Create SelectBox
-	public static function cmsSelectbox($name, $class, $arrValue, $keySelect = 'default', $style = null){
-        
-		$xhtml = '<select style="'.$style.'" name="'.$name.'" class="'.$class.'" >';
-		foreach($arrValue as $key => $value){
-			if($key == $keySelect){
-				$xhtml .= '<option selected="selected" value = "'.$key.'">'.$value.'</option>';
-			}else{
-				$xhtml .= '<option value = "'.$key.'">'.$value.'</option>';
-			}
-		}
-		$xhtml .= '</select>';
-		return $xhtml;
-	}
-
     // Create Message
 	public static function cmsMessage($message){
 		$xhtml = '';
@@ -88,6 +73,38 @@ class Helper
 							</dd>
 						</dl>';
 		}
+		return $xhtml;
+	}
+
+    // CREATE INPUT TEXT
+    public static function cmsInput($type, $name, $id, $value, $class = null, $size = null){
+        $strSize	=	($size==null) ? '' : "size='$size'";
+		$strClass	=	($class==null) ? '' : "class='$class'";
+        $xhtml = "<input type='$type' name='$name' id='$id' value='$value' $strSize $strClass>";
+
+        return $xhtml;
+    }
+
+    // Create Selectbox
+	public static function cmsSelectbox($name, $class, $arrValue, $keySelect = 'default', $style = null){
+		$xhtml = '<select style="'.$style.'" name="'.$name.'" class="'.$class.'" >';
+		foreach($arrValue as $key => $value){
+			if($key == $keySelect && is_numeric($keySelect)){
+				$xhtml .= '<option selected="selected" value = "'.$key.'">'.$value.'</option>';
+			}else{
+				$xhtml .= '<option value = "'.$key.'">'.$value.'</option>';
+			}
+		}
+		$xhtml .= '</select>';
+		return $xhtml;
+	}
+
+    // Create Row - ADMIN
+	public static function cmsRowForm($lblName, $input, $require = false){
+		$strRequired = '';
+		if($require == true ) $strRequired = '<span class="star">&nbsp;*</span>';
+		$xhtml = '<li><label>'.$lblName.$strRequired.'</label>'.$input.'</li>';
+	
 		return $xhtml;
 	}
 }
