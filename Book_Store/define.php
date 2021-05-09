@@ -5,7 +5,8 @@
     define('LIBRARY_PATH', ROOT_PATH . DS . 'libs' . DS); //  libs
     define('PUBLIC_PATH', ROOT_PATH . DS . 'public' . DS); //  public
     define('APPLICATION_PATH', ROOT_PATH . DS . 'application' . DS); //  application
-    define ('MODULE_PATH'		, APPLICATION_PATH . 'module' . DS);	 //  module
+    define('MODULE_PATH', APPLICATION_PATH . 'module' . DS);	 //  module
+    define('BLOCK_PATH', APPLICATION_PATH . 'block' . DS);	 //  block
     define('TEMPLATE_PATH', PUBLIC_PATH . 'template' . DS); //  template
 
 
