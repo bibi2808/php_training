@@ -230,7 +230,7 @@ class Validate{
 	
 		$query	  = $options['query'];	// SELECT id FROM user where username = 'admin'
 		if($database->isExist($query)==true){
-			$this->setError($element, 'giá trị này đã tồn tại');
+			$this->setError($element, 'record is exist');
 		}
 	}
 	
@@ -248,13 +248,3 @@ class Validate{
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-

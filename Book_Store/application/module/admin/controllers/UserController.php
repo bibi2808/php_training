@@ -61,26 +61,38 @@ class UserController extends Controller
             $this->_arrParam['form'] = $this->_model->inforItem($this->_arrParam);
             if(empty($this->_arrParam['form'])) URL::redirect('admin', 'user', 'index');
         }
+
         // check after click save
         if((isset($this->_arrParam['form']['token']) ? $this->_arrParam['form']['token'] : '') > 0){
-            $task	= (isset($this->_arrParam['form']['id'])) ? 'edit' : 'add';
+            $task	= 'add';
+            $requiredPass = true;
+            $queryUsername = "SELECT `id` FROM `user` WHERE `username` = '".$this->_arrParam['form']['username']."'"; 
+            $queryEmail = "SELECT `id` FROM `user` WHERE `email` = '".$this->_arrParam['form']['email']."'"; 
+            if(isset($this->_arrParam['form']['id'])){
+                $task = 'edit';
+                $queryUsername .= " AND `id` <> '" . $this->_arrParam['form']['id']."'";
+                $queryEmail .= " AND `id` <> '" . $this->_arrParam['form']['id']."'";
+                $requiredPass = false;
+            }
+            
             $validate = new Validate($this->_arrParam['form']);
-            $validate->addRule('username', 'string', array('min' => 3, 'max' => 255))
-                        ->addRule('ordering', 'int', array('min' => 3, 'max' => 255))
-                        ->addRule('password', 'password', array('action' => $task))
-                        ->addRule('email', 'email')
+            $validate   ->addRule('username', 'string-notExistRecord', array('database' => $this->_model, 'query' => $queryUsername, 'min' => 1, 'max' => 100))
+                        ->addRule('email', 'email-notExistRecord',array('database' => $this->_model, 'query' => $queryEmail))
+                        ->addRule('ordering', 'int', array('min' => 1, 'max' => 100))
+                        ->addRule('password', 'password', array('action' => $task), )
                         ->addRule('status','status', array('deny' => array('default')))
                         ->addRule('group_id', 'status', array('deny' => array('default')));
 
-
             $validate->run();
             $this->_arrParam['form'] = $validate->getResult();
+
             if($validate->isValid() == false){
                 $this->_view->errors = $validate->showErrors();
             } else{
                 // save data
                 
-				$id	= $this->_model->saveItem($this->_arrParam, array('task' => $task));
+                $id	= $this->_model->saveItem($this->_arrParam, array('task' => $task));
+                
 				if($this->_arrParam['type'] == 'save-close') 	URL::redirect('admin', 'user', 'index');
 				if($this->_arrParam['type'] == 'save-new') 		URL::redirect('admin', 'user', 'form');
 				if($this->_arrParam['type'] == 'save') 			URL::redirect('admin', 'user', 'form', array('id' => $id));

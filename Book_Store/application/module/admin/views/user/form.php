@@ -1,9 +1,6 @@
 <?php
-include_once 'toolbar/index.php';
+include_once(MODULE_PATH . 'admin/views/toolbar.php');
 include_once 'submenu/index.php';
-
-
-
 
     // input
     $dataForm         = isset($this->arrParam['form']) ? $this->arrParam['form'] : '';

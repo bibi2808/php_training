@@ -1,7 +1,7 @@
 <?php
 class UserModel extends Model
 {
-    private $_columns = array('id', 'username', 'email', 'fullname', 'created', 'created_by', 'modified', 'modified_by', 'status', 'ordering', 'group_id');
+    private $_columns = array('id', 'username', 'email', 'password', 'fullname', 'created', 'created_by', 'modified', 'modified_by', 'status', 'ordering', 'group_id');
     private $_userInfo;
     public function __construct()
     {
@@ -37,7 +37,7 @@ class UserModel extends Model
             $columnDir    = $arrParam['filter_column_dir'];
             $query[]    = "ORDER BY `u`.`$column` $columnDir";
         } else {
-            $query[]    = "ORDER BY `u`.`username` ASC";
+            $query[]    = "ORDER BY `u`.`id` DESC";
         }
 
         // PAGINATION
@@ -150,6 +150,7 @@ class UserModel extends Model
         if ($option['task'] == 'add') {
             $arrParam['form']['created']    = date('Y-m-d', time());
             $arrParam['form']['created_by']    = 1;
+            $arrParam['form']['password']    = md5($arrParam['form']['password']);
             $data    = array_intersect_key($arrParam['form'], array_flip($this->_columns));
             $this->insert($data);
             Session::set('message', array('class' => 'success', 'content' => 'Success!'));
@@ -158,6 +159,11 @@ class UserModel extends Model
         if ($option['task'] == 'edit') {
             $arrParam['form']['modified']    = date('Y-m-d', time());
             $arrParam['form']['modified_by'] = $this->_userInfo['username'];
+            if($arrParam['form']['password'] !=null){
+                $arrParam['form']['password'] = md5($arrParam['form']['password']);
+            } else {
+                unset($arrParam['form']['password']);
+            }
             $data    = array_intersect_key($arrParam['form'], array_flip($this->_columns));
             $this->update($data, array(array('id', $arrParam['form']['id'])));
             Session::set('message', array('class' => 'success', 'content' => 'Success!'));
@@ -168,7 +174,7 @@ class UserModel extends Model
     public function inforItem($arrParam, $option = null)
     {
         if ($option == null) {
-            $query[]    = "SELECT `id`, `name`, `group_acp`, `status`, `ordering`";
+            $query[]	= "SELECT `id`, `username`, `email`, `fullname`,`group_id`, `status`, `ordering`";
             $query[]    = "FROM `$this->table`";
             $query[]    = "WHERE `id` = '" . $arrParam['id'] . "'";
             $query        = implode(" ", $query);
