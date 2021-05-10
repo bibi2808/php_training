@@ -8,6 +8,9 @@ switch($this->arrParams['type']){
     case 'not-permission':
         $message = 'You have no permission';
         break;
+    case 'not-url':
+        $message = 'You have no url';
+        break;
 }
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-    $controller = $this->arrParam['controller'];
+    echo $controller = $this->arrParams['controller'];
 
     // Button Add
     $linkNew = URL::createLink('admin', $controller, 'form');
@@ -46,10 +46,13 @@
     switch ($this->arrParams['action']) {
         case 'index':
             $cmsBtn = $btnNew . $btnPublish . $btnUnPushlish .$btnOrdering . $btnTrash;
-        break;
+            break;
         case 'form':
             $cmsBtn = $btnSave . $btnSaveClose . $btnSaveNew . $btnCancel;
-        break;
+            break;
+        case 'profile':
+            $cmsBtn = $btnSave . $btnSaveClose . $btnCancel;
+            break;
     }
 
 ?>

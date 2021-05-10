@@ -1,10 +1,12 @@
 <?php
-    $linkControlPanel   = URL::createLink('admin', 'control', 'index');
-    $linkMyProfile      = URL::createLink('admin', 'profile', 'index');
+    $linkControlPanel   = URL::createLink('admin', 'index', 'index');
+    $linkMyProfile      = URL::createLink('admin', 'index', 'profile');
     $linkUserManager    = URL::createLink('admin', 'user', 'index');
-    $linkAddUser        = URL::createLink('admin', 'user', 'add');
+    $linkAddUser        = URL::createLink('admin', 'user', 'form');
     $linkGroupManager   = URL::createLink('admin', 'group', 'index');
-    $linkAddGroup       = URL::createLink('admin', 'group', 'add');
+    $linkAddGroup       = URL::createLink('admin', 'group', 'form');
+
+    $linkViewSite       = URL::createLink('default', 'index', 'index');
     $linkLogout         = URL::createLink('admin', 'index', 'logout');
     $linkHome           = URL::createLink('admin', 'index', 'index');
 ?>
@@ -17,7 +19,7 @@
     <!-- HEADER -->
     <div id="header-box">
         <div id="module-status">
-            <span class="viewsite"><a href="/bookstore/index.php?module=default&controller=index&action=index"
+            <span class="viewsite"><a href="<?php echo $linkViewSite; ?>"
                     target="_blank">View Site</a></span>
             <span class="no-unread-messages"><a
                     href="<?php echo $linkLogout; ?>">Log out</a></span>

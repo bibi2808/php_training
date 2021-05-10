@@ -2,10 +2,6 @@
 include_once(MODULE_PATH . 'admin/views/toolbar.php');
 include_once 'submenu/index.php';
 
-echo '<pre>';
-print_r($this->arrParam);
-echo '<pre />';
-
     // input
     $dataForm         = isset($this->arrParam['form']) ? $this->arrParam['form'] : '';
     $inputUserName = Helper::cmsInput('text', 'form[username]', 'name', $dataForm['username'] ?? null, 'inputbox required', 40);

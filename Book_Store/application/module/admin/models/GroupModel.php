@@ -163,17 +163,25 @@ class GroupModel extends Model
 
     public function saveItem($arrParam, $option = null)
     {
+        $userObj = Session::get('user');
+        $userInfo = $userObj['info'];
+
         if($option['task'] == 'add'){
 			$arrParam['form']['created']	= date('Y-m-d', time());
-			$arrParam['form']['created_by']	= 1;
-			$data	= array_intersect_key($arrParam['form'], array_flip($this->_columns));
+			$arrParam['form']['created_by']	= $userInfo['username'];
+            $data	= array_intersect_key($arrParam['form'], array_flip($this->_columns));
+            echo '<pre>';
+print_r($data);
+echo '<pre />';
+            
 			$this->insert($data);
 			Session::set('message', array('class' => 'success', 'content' => 'Success!'));
 			return $this->lastID();
 		}
 		if($option['task'] == 'edit'){
-			$arrParam['form']['modified']	= date('Y-m-d', time());
-			$arrParam['form']['modified_by']= $this->_userInfo['username'];
+            $arrParam['form']['modified']	= date('Y-m-d', time());
+            $arrParam['form']['modified_by']= $userInfo['username'];
+			// $arrParam['form']['modified_by']= $this->_userInfo['username'];
 			$data	= array_intersect_key($arrParam['form'], array_flip($this->_columns));
 			$this->update($data, array(array('id', $arrParam['form']['id'])));
 			Session::set('message', array('class' => 'success', 'content' => 'Success!'));

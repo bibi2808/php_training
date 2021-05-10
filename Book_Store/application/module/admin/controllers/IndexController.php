@@ -1,7 +1,6 @@
 <?php
 class IndexController extends Controller
 {
-
     public function __construct($arrParams)
     {
         parent::__construct($arrParams);
@@ -13,13 +12,21 @@ class IndexController extends Controller
 
     public function loginAction()
     {
+        $userInfo = Session::get('user');
+        if ($userInfo['login'] && $userInfo['time'] + TIME_LOGIN >= time()) {
+            // logged success
+            URL::redirect('admin', 'index', 'index');
+        }
+
+
         $this->_templateObj->setFolderTemplate('admin/main/');
         $this->_templateObj->setFileTemplate('login.php');
         $this->_templateObj->setFileConfig('template.ini');
         $this->_templateObj->load();
-        
-        if(isset($this->_arrParam['form']['token']) > 0){
 
+       
+        
+        if (isset($this->_arrParam['form']['token']) > 0) {
             $validate = new Validate($this->_arrParam['form']);
 
             $username = $this->_arrParam['form']['username'];
@@ -27,11 +34,11 @@ class IndexController extends Controller
 
             $query = "SELECT `id` FROM `user` WHERE `username` = '$username' AND `password` = '$password'";
 
-            $validate->addRule('username','existRecord', array('database' => $this->_model, 'query' => $query));
+            $validate->addRule('username', 'existRecord', array('database' => $this->_model, 'query' => $query));
 
             $validate->run();
 
-            if($validate->isValid()){
+            if ($validate->isValid()) {
                 $infoUser = $this->_model->infoItem($this->_arrParam);
                 $arrSession = array(
                                     'login' => true,
@@ -42,7 +49,7 @@ class IndexController extends Controller
                 
                 Session::set('user', $arrSession);
                 URL::redirect('admin', 'index', 'index');
-            } else{
+            } else {
                 $this->_view->errors = $validate->showErrors();
             }
         }
@@ -53,9 +60,6 @@ class IndexController extends Controller
 
     public function indexAction()
     {
-        // echo '<pre>';
-        // print_r($_SESSION);
-        // echo '<pre />';
         $this->_templateObj->setFolderTemplate('admin/main/');
         $this->_templateObj->setFileTemplate('index.php');
         $this->_templateObj->setFileConfig('template.ini');
@@ -65,8 +69,24 @@ class IndexController extends Controller
         $this->_view->render('index/index');
     }
 
-    public function logoutAction(){
+    public function logoutAction()
+    {
         Session::delete('user');
         URL::redirect('admin', 'index', 'login');
+    }
+
+    public function profileAction()
+    {
+        $this->_templateObj->setFolderTemplate('admin/main/');
+        $this->_templateObj->setFileTemplate('index.php');
+        $this->_templateObj->setFileConfig('template.ini');
+        $this->_templateObj->load();
+
+        $userObj = Session::get('user');
+
+        $this->_view->arrParam['form'] = $userObj['info'];
+        
+        $this->_view->_title = "Profile";
+        $this->_view->render('index/profile');
     }
 }
