@@ -1,15 +1,17 @@
 <?php
-    $linkControlPanel = URL::createLink('admin', 'control', 'index');
-    $linkMyProfile = URL::createLink('admin', 'profile', 'index');
-    $linkUserManager = URL::createLink('admin', 'user', 'index');
-    $linkAddUser = URL::createLink('admin', 'user', 'add');
-    $linkGroupManager = URL::createLink('admin', 'group', 'index');
-    $linkAddGroup = URL::createLink('admin', 'group', 'add');
+    $linkControlPanel   = URL::createLink('admin', 'control', 'index');
+    $linkMyProfile      = URL::createLink('admin', 'profile', 'index');
+    $linkUserManager    = URL::createLink('admin', 'user', 'index');
+    $linkAddUser        = URL::createLink('admin', 'user', 'add');
+    $linkGroupManager   = URL::createLink('admin', 'group', 'index');
+    $linkAddGroup       = URL::createLink('admin', 'group', 'add');
+    $linkLogout         = URL::createLink('admin', 'index', 'logout');
+    $linkHome           = URL::createLink('admin', 'index', 'index');
 ?>
 
 <body>
     <div id="border-top" class="h_blue">
-        <span class="title"><a href="#">Administration</a></span>
+        <span class="title"><a href="<?php echo $linkHome; ?>">Administration</a></span>
     </div>
 
     <!-- HEADER -->
@@ -18,7 +20,7 @@
             <span class="viewsite"><a href="/bookstore/index.php?module=default&controller=index&action=index"
                     target="_blank">View Site</a></span>
             <span class="no-unread-messages"><a
-                    href="/bookstore/index.php?module=admin&controller=index&action=logout">Log out</a></span>
+                    href="<?php echo $linkLogout; ?>">Log out</a></span>
         </div>
         <div id="module-menu">
             <!-- MENU -->

@@ -79,7 +79,7 @@ class UserController extends Controller
             $validate   ->addRule('username', 'string-notExistRecord', array('database' => $this->_model, 'query' => $queryUsername, 'min' => 1, 'max' => 100))
                         ->addRule('email', 'email-notExistRecord',array('database' => $this->_model, 'query' => $queryEmail))
                         ->addRule('ordering', 'int', array('min' => 1, 'max' => 100))
-                        ->addRule('password', 'password', array('action' => $task), )
+                        ->addRule('password', 'password', array('action' => $task, 'query' => $requiredPass), )
                         ->addRule('status','status', array('deny' => array('default')))
                         ->addRule('group_id', 'status', array('deny' => array('default')));
 

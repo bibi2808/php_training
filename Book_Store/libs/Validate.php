@@ -153,6 +153,7 @@ class Validate{
 		return $xhtml;
 	}
 	
+	
 	public function showErrorsPublic(){
 		$xhtml = '';
 		if(!empty($this->errors)){

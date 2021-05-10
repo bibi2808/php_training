@@ -10,18 +10,19 @@ class IndexController extends Controller{
         $this->_templateObj->load();
     }
 
-
     public function indexAction(){
-        echo '<h3>' . __METHOD__ . '</h3>';
-        // $this->setModel('admin','index');
-        // $this->_model->listItems();
-        // $this->_view->data = 'PHP';
-        // $this->_view->render('user/index');
+        $this->_view->render('index/index');
     }
 
-    // public function addAction(){
-    //     echo __METHOD__;
-    // }
+    public function noticeAction(){
+        $this->_view->render('index/notice');
+    }
+
+    public function categoryAction(){
+        $this->_view->render('index/category');
+    }
+
+    
 
     // public function loginAction()
     // {

@@ -35,7 +35,7 @@ class Template
             $view->_metaName    = $view->createMeta($arrConfig['metaName'], 'name');
             $view->_cssFiles    = $view->createLink($this->_folderTemplate . $arrConfig['dirCss'], $arrConfig['fileCss'], 'css');
             $view->_jsFiles     = $view->createLink($this->_folderTemplate . ($arrConfig['dirJs'] ?? ''), ($arrConfig['fileJs'] ?? ''), 'js');
-            $view->_dirImg      = $arrConfig['dirImg'] ?? '';
+            $view->_dirImg      = TEMPLATE_URL . $this->_folderTemplate . $arrConfig['dirImg'] ?? '';
 
 
 

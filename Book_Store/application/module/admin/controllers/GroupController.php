@@ -91,4 +91,8 @@ class GroupController extends Controller
         $this->_view->arrParam = $this->_arrParam;
         $this->_view->render('group/form');
     }
+
+    public function addAction(){
+        echo __METHOD__;
+    }
 }

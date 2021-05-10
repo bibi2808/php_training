@@ -1,6 +1,3 @@
 echo '<pre>';
 print_r($outValidate);
 echo '<pre />';
-
-
-echo '<h3>' . __METHOD__ . '</h3>';

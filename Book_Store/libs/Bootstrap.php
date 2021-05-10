@@ -3,6 +3,7 @@ class Bootstrap
 {
     private $_params;
     private $_controllerObject;
+
     public function init()
     {
         $this->setParam();
@@ -35,6 +36,47 @@ class Bootstrap
 
         if (method_exists($this->_controllerObject, $actionName)) {
             $this->_controllerObject->$actionName();
+
+            
+            $module = $this->_params['module'];
+            $controller = $this->_params['controller'];
+            $action = $this->_params['action'];
+
+            $userInfo = Session::get('user');
+
+            $logged = ($userInfo['login'] && $userInfo['time'] + TIME_LOGIN >= time());
+
+            $pageLogin = ($controller == 'index') && ($action == 'login');
+
+            if($module == 'admin'){
+                // ADMIN
+                if($logged == true){
+                    echo '<pre>';
+                    print_r($_SESSION['user']['group_acp']);
+                    echo '<pre />';
+                    // check quyền truy cập
+                    if($_SESSION['user']['group_acp'] == 1){
+                        
+                        if($pageLogin ==  true) URL::redirect('admin', 'index', 'index');
+                        if($pageLogin == false) $this->_controllerObject->$actionName();
+                        
+                    } else{
+                        URL::redirect('default', 'index', 'notice', array('type' => 'not-permission'));
+                    }
+                } else{
+                    Session::delete('user');
+                    
+                    // khi load to loginPage
+                    if($pageLogin == true) $this->_controllerObject->$actionName();
+
+                    // khi chưa login thì redirect to loginPage
+                    if($pageLogin == false) URL::redirect('admin', 'index', 'login');
+                }
+
+            } else if($module == 'default'){
+                // DEFAULT
+                $this->_controllerObject->$actionName();
+            }
         } else {
             $this->_error();
         }
