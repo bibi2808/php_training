@@ -1,3 +1,3 @@
 <?php
 
-    echo '<p>' . strtolower($this->data) . '</p>';
+    echo '<p>' . __FILE__ . '</p>';

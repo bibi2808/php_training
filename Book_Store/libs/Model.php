@@ -47,6 +47,7 @@ class Model{
 	
 	// DISCONNECT DATABASE
 	public function __destruct(){
+		
 		mysqli_close($this->connect);
 	}
 	
@@ -55,7 +56,7 @@ class Model{
 		if($type == 'single'){
 			$newQuery 	= $this->createInsertSQL($data);
 			echo $query 		= "INSERT INTO `$this->table`(".$newQuery['cols'].") VALUES (".$newQuery['vals'].")";
-			die('ok');
+			die('OKOKOK');
 			$this->query($query);
 		}else{
 			foreach($data as $value){

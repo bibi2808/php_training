@@ -5,3 +5,15 @@ Manage Invoice  module Invoice
 Manage Guest    module Client
 
 --------------------MAIL REQUEST---------------------------
+public function saveItem($arrParam, $option=null){
+    $arrParam['form']['active_code'] = time();
+}
+
+$link = index.php?module=default&controller=user&action=active
+        Params : userId
+                active_code
+compare: link & database <=> update status = 1 ,activecode = 1
+
+-----
+LOGIN ADMIN -> group_acp = 1 -> admin control panel
+

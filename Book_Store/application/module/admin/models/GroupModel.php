@@ -169,11 +169,7 @@ class GroupModel extends Model
         if($option['task'] == 'add'){
 			$arrParam['form']['created']	= date('Y-m-d', time());
 			$arrParam['form']['created_by']	= $userInfo['username'];
-            $data	= array_intersect_key($arrParam['form'], array_flip($this->_columns));
-            echo '<pre>';
-print_r($data);
-echo '<pre />';
-            
+            $data	= array_intersect_key($arrParam['form'], array_flip($this->_columns));            
 			$this->insert($data);
 			Session::set('message', array('class' => 'success', 'content' => 'Success!'));
 			return $this->lastID();

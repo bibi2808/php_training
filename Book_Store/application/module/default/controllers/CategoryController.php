@@ -1,6 +1,5 @@
 <?php
-class UserController extends Controller
-{
+class CategoryController extends Controller{
     public function __construct($arrParams)
     {
         parent::__construct($arrParams);
@@ -10,13 +9,7 @@ class UserController extends Controller
         $this->_templateObj->load();
     }
 
-
-    
-
-    // MY ACCOUNT
     public function indexAction(){
-        $this->_view->render('user/index');
+        $this->_view->render('category/index');
     }
-
-    
 }

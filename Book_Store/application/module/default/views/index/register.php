@@ -17,7 +17,7 @@ $rowPassword    = Helper::cmsRow('Password', Helper::cmsInput('text', 'form[pass
 $rowEmail       = Helper::cmsRow('Email', Helper::cmsInput('text', 'form[email]', 'email', $dataForm['email'] ?? null, 'contact-input'));
 $rowSubmit      = Helper::cmsRow('Submit', $inputToken . $inputSubmit, true);
 
-$link = URL::createLink('default', 'user', 'register');
+$link = URL::createLink('default', 'index', 'register');
 ?>
 
 <div class="title">

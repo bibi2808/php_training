@@ -46,10 +46,10 @@ class GroupController extends Controller
     }
 
     // ACTION: TRASH (*)
-	public function trashAction(){
-		$this->_model->deleteItem($this->_arrParam);
-		URL::redirect('admin', 'group', 'index');
-	}
+	// public function trashAction(){
+	// 	$this->_model->deleteItem($this->_arrParam);
+	// 	URL::redirect('admin', 'group', 'index');
+	// }
     
     public function orderingAction()
     {
@@ -57,40 +57,40 @@ class GroupController extends Controller
         URL::redirect('admin', 'group', 'index');
     }
 
-    public function formAction(){
-        $this->_view->_title = 'ADD FORM';
-        if(isset($this->_arrParam['id'])){
-            $this->_view->_title = 'EDIT FORM';
-            $this->_arrParam['form'] = $this->_model->inforItem($this->_arrParam);
-            if(empty($this->_arrParam['form'])) URL::redirect('admin', 'group', 'index');
-        }
-        // check after click save
-        if((isset($this->_arrParam['form']['token']) ? $this->_arrParam['form']['token'] : '') > 0){
+    // public function formAction(){
+    //     $this->_view->_title = 'ADD FORM';
+    //     if(isset($this->_arrParam['id'])){
+    //         $this->_view->_title = 'EDIT FORM';
+    //         $this->_arrParam['form'] = $this->_model->inforItem($this->_arrParam);
+    //         if(empty($this->_arrParam['form'])) URL::redirect('admin', 'group', 'index');
+    //     }
+    //     // check after click save
+    //     if((isset($this->_arrParam['form']['token']) ? $this->_arrParam['form']['token'] : '') > 0){
 
-            $validate = new Validate($this->_arrParam['form']);
-            $validate->addRule('name', 'string', array('min' => 3, 'max' => 255))
-                        ->addRule('ordering', 'int', array('min' => 3, 'max' => 255))
-                        ->addRule('status','status', array('deny' => array('default')))
-                        ->addRule('group_acp', 'status', array('deny' => array('default')));
+    //         $validate = new Validate($this->_arrParam['form']);
+    //         $validate->addRule('name', 'string', array('min' => 3, 'max' => 255))
+    //                     ->addRule('ordering', 'int', array('min' => 3, 'max' => 255))
+    //                     ->addRule('status','status', array('deny' => array('default')))
+    //                     ->addRule('group_acp', 'status', array('deny' => array('default')));
 
 
-            $validate->run();
-            $this->_arrParam['form'] = $validate->getResult();
-            if($validate->isValid() == false){
-                $this->_view->errors = $validate->showErrors();
-            } else{
-                // save data
-                $task	= (isset($this->_arrParam['form']['id'])) ? 'edit' : 'add';
-				$id	= $this->_model->saveItem($this->_arrParam, array('task' => $task));
-				if($this->_arrParam['type'] == 'save-close') 	URL::redirect('admin', 'group', 'index');
-				if($this->_arrParam['type'] == 'save-new') 		URL::redirect('admin', 'group', 'form');
-				if($this->_arrParam['type'] == 'save') 			URL::redirect('admin', 'group', 'form', array('id' => $id));
-            }
-        }
+    //         $validate->run();
+    //         $this->_arrParam['form'] = $validate->getResult();
+    //         if($validate->isValid() == false){
+    //             $this->_view->errors = $validate->showErrors();
+    //         } else{
+    //             // save data
+    //             $task	= (isset($this->_arrParam['form']['id'])) ? 'edit' : 'add';
+	// 			$id	= $this->_model->saveItem($this->_arrParam, array('task' => $task));
+	// 			if($this->_arrParam['type'] == 'save-close') 	URL::redirect('admin', 'group', 'index');
+	// 			if($this->_arrParam['type'] == 'save-new') 		URL::redirect('admin', 'group', 'form');
+	// 			if($this->_arrParam['type'] == 'save') 			URL::redirect('admin', 'group', 'form', array('id' => $id));
+    //         }
+    //     }
         
-        $this->_view->arrParam = $this->_arrParam;
-        $this->_view->render('group/form');
-    }
+    //     $this->_view->arrParam = $this->_arrParam;
+    //     $this->_view->render('group/form');
+    // }
 
     public function addAction(){
         echo __METHOD__;

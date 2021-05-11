@@ -13,7 +13,7 @@ class IndexController extends Controller
     public function loginAction()
     {
         $userInfo = Session::get('user');
-        if ($userInfo['login'] && $userInfo['time'] + TIME_LOGIN >= time()) {
+        if (isset($userInfo['login']) && $userInfo['time'] + TIME_LOGIN >= time()) {
             // logged success
             URL::redirect('admin', 'index', 'index');
         }

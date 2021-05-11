@@ -1,10 +1,20 @@
 <?php
     $linkControlPanel   = URL::createLink('admin', 'index', 'index');
+
     $linkMyProfile      = URL::createLink('admin', 'index', 'profile');
+
     $linkUserManager    = URL::createLink('admin', 'user', 'index');
+
     $linkAddUser        = URL::createLink('admin', 'user', 'form');
+
     $linkGroupManager   = URL::createLink('admin', 'group', 'index');
     $linkAddGroup       = URL::createLink('admin', 'group', 'form');
+
+    $linkCategoryManager   = URL::createLink('admin', 'category', 'index');
+    $linkAddCategory       = URL::createLink('admin', 'category', 'form');
+    
+    $linkBookManager   = URL::createLink('admin', 'book', 'index');
+    $linkAddBook       = URL::createLink('admin', 'book', 'form');
 
     $linkViewSite       = URL::createLink('default', 'index', 'index');
     $linkLogout         = URL::createLink('admin', 'index', 'logout');
@@ -61,22 +71,22 @@
                     <ul>
                         <li class="node">
                             <a class="icon-16-category"
-                                href="/bookstore/index.php?module=admin&controller=category&action=index">Category
+                                href="<?php echo $linkCategoryManager; ?>">Category
                                 Manager</a>
                             <ul id="menu-com-users-users" class="menu-component">
                                 <li><a class="icon-16-newarticle"
-                                        href="/bookstore/index.php?module=admin&controller=category&action=form">Add
+                                        href="<?php echo $linkAddCategory; ?>">Add
                                         New
                                         Category</a></li>
                             </ul>
                         </li>
                         <li class="node">
                             <a class="icon-16-article"
-                                href="/bookstore/index.php?module=admin&controller=book&action=index">Book
+                                href="<?php echo $linkBookManager; ?>">Book
                                 Manager</a>
                             <ul id="menu-com-users-groups" class="menu-component">
                                 <li><a class="icon-16-newarticle"
-                                        href="/bookstore/index.php?module=admin&controller=book&action=form">Add
+                                        href="<?php echo $linkAddBook; ?>">Add
                                         New
                                         Book</a></li>
                             </ul>

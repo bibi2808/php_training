@@ -23,10 +23,10 @@ class Bootstrap
     // SET PARAMS
     public function setParam()
     {
-        $this->_params 	= array_merge($_GET, $_POST);
-        $this->_params['module'] 		= isset($this->_params['module']) ? $this->_params['module'] : DEFAULT_MODULE;
-        $this->_params['controller'] 	= isset($this->_params['controller']) ? $this->_params['controller'] : DEFAULT_CONTROLLER;
-        $this->_params['action'] 		= isset($this->_params['action']) ? $this->_params['action'] : DEFAULT_ACTION;
+        $this->_params     = array_merge($_GET, $_POST);
+        $this->_params['module']         = isset($this->_params['module']) ? $this->_params['module'] : DEFAULT_MODULE;
+        $this->_params['controller']     = isset($this->_params['controller']) ? $this->_params['controller'] : DEFAULT_CONTROLLER;
+        $this->_params['action']         = isset($this->_params['action']) ? $this->_params['action'] : DEFAULT_ACTION;
     }
 
     // CALL METHOD
@@ -36,25 +36,39 @@ class Bootstrap
 
         if (method_exists($this->_controllerObject, $actionName)) {
             $module = $this->_params['module'];
+            $controller = $this->_params['controller'];
+            $action = $this->_params['action'];
+            $requestURL = "$module-$controller-$action";
 
             $userInfo = Session::get('user');
-            $logged = ($userInfo['login'] && $userInfo['time'] + TIME_LOGIN >= time());
+            $logged = (isset($userInfo['login']) && $userInfo['time'] + TIME_LOGIN >= time());
             if ($module == 'admin') {
+
                 if ($logged == true) {
                     if ($userInfo['group_acp'] == 1) {
-                        $this->_controllerObject->$actionName();
+                        // phân quyền
+                        // if(in_array($requestURL, $userInfo['info']['privilege_id']) == true){
+                            $this->_controllerObject->$actionName();
+                        // }else{
+                        //     URL::redirect('default', 'index', 'notice', array('type' => 'not-permission'));
+                        // }
                     } else {
                         URL::redirect('default', 'index', 'notice', array('type' => 'not-permission'));
                     }
                 } else {
-                    Session::delete('user');
-                    require_once(MODULE_PATH . $module . DS . 'controllers' . DS . 'IndexController.php');
-                    $indexController = new IndexController($this->_params);
-                    $indexController->loginAction();
+                    $this->callLoginAction($module);
                 }
             } else if ($module == 'default') {
                 // DEFAULT
-                $this->_controllerObject->$actionName();
+                if ($controller == 'user') {
+                    if ($logged == true) {
+                        $this->_controllerObject->$actionName();
+                    } else {
+                        $this->callLoginAction($module);
+                    }
+                } else {
+                    $this->_controllerObject->$actionName();
+                }
             }
         } else {
             URL::redirect('default', 'index', 'notice', array('type' => 'not-url'));
@@ -75,5 +89,14 @@ class Bootstrap
         $this->_controllerObject = new ErrorController();
         $this->_controllerObject->setView('default');
         $this->_controllerObject->indexAction();
+    }
+
+    // CALL ACTION LOGIN
+    public function callLoginAction($module = 'default')
+    {
+        Session::delete('user');
+        require_once(MODULE_PATH . $module . DS . 'controllers' . DS . 'IndexController.php');
+        $indexController = new IndexController($this->_params);
+        $indexController->loginAction();
     }
 }

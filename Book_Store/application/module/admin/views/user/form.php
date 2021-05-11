@@ -19,6 +19,7 @@ include_once 'submenu/index.php';
     $rowID            = '';
     if (isset($this->arrParam['id'])) {
         $inputID    = Helper::cmsInput('text', 'form[id]', 'id', $dataForm['id'], 'inputbox readonly');
+        $inputUserName = Helper::cmsInput('text', 'form[username]', 'name', $dataForm['username'] ?? null, 'inputbox readonly', 40);
         $rowID        = Helper::cmsRowForm('ID', $inputID);
     }
     // ROW

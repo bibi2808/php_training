@@ -1,6 +1,6 @@
 <?php
 
-    echo $controller = $this->arrParams['controller'];
+    $controller = $this->arrParams['controller'];
 
     // Button Add
     $linkNew = URL::createLink('admin', $controller, 'form');
@@ -39,13 +39,14 @@
     $btnCancel = Helper::cmsButton('Cancel', 'toolbar-cancel', $linkCancel, 'icon-32-cancel');
 
 
-
-
-
     $cmsBtn = $btnNew . $btnPublish . $btnUnPushlish . $btnTrash;
     switch ($this->arrParams['action']) {
         case 'index':
-            $cmsBtn = $btnNew . $btnPublish . $btnUnPushlish .$btnOrdering . $btnTrash;
+            if($controller == 'group'){
+                $cmsBtn = $btnPublish . $btnUnPushlish .$btnOrdering ;
+            }else{
+                $cmsBtn = $btnNew . $btnPublish . $btnUnPushlish .$btnOrdering .$btnTrash;
+            }
             break;
         case 'form':
             $cmsBtn = $btnSave . $btnSaveClose . $btnSaveNew . $btnCancel;
@@ -54,6 +55,11 @@
             $cmsBtn = $btnSave . $btnSaveClose . $btnCancel;
             break;
     }
+
+    // màn hình 4k- 12m
+    // ghế - 6m
+    // loa - 6m
+    // bàn 
 
 ?>
 
